@@ -1,10 +1,16 @@
 package pvtitov.myclients;
 
 import android.app.Application;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pvtitov.myclients.api.Info;
 import pvtitov.myclients.api.RandomUserApi;
 import pvtitov.myclients.api.RandomUserModel;
+import pvtitov.myclients.api.Result;
+import pvtitov.myclients.model.Client;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +28,7 @@ public class MyApplication extends Application {
         return randomUserApi;
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,6 +38,5 @@ public class MyApplication extends Application {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         randomUserApi = retrofit.create(RandomUserApi.class);
-
     }
 }

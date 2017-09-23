@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import pvtitov.myclients.dummy.DummyContent;
+import pvtitov.myclients.model.Client;
+import pvtitov.myclients.model.ClientsFactory;
 
 /**
  * A fragment representing a single Client detail screen.
@@ -27,7 +28,7 @@ public class ClientDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private Client client;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -44,12 +45,13 @@ public class ClientDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            client = new Client();
+                    //ClientsFactory.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
+                appBarLayout.setTitle(client.getFirstName());
             }
         }
     }
@@ -60,8 +62,8 @@ public class ClientDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.client_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.client_detail)).setText(mItem.details);
+        if (client != null) {
+            ((TextView) rootView.findViewById(R.id.client_detail)).setText(client.getLastName());
         }
 
         return rootView;

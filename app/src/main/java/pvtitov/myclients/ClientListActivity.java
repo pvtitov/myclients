@@ -14,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-import pvtitov.myclients.api.RandomUserApi;
 import pvtitov.myclients.api.RandomUserModel;
 import pvtitov.myclients.api.Result;
-import pvtitov.myclients.dummy.DummyContent;
+import pvtitov.myclients.model.Client;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,11 +37,15 @@ import java.util.List;
  */
 public class ClientListActivity extends AppCompatActivity {
 
+    private static final int COUNT = 14;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+
+    private ArrayList<Client> allClients = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +65,31 @@ public class ClientListActivity extends AppCompatActivity {
             }
         });
 
-        View recyclerView = findViewById(R.id.client_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        MyApplication.getRandomUserApi().getUsers(COUNT).enqueue(new Callback<RandomUserModel>() {
+            @Override
+            public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
+                List<Result> results;
+                if (response.body() != null) {
+                    results = response.body().getResults();
+                    for (int i = 0; i < COUNT; i++){
+                        allClients.add(new Client(results, i));
+                        Log.d("happy", allClients.get(i).getFirstName());
+
+                        View recyclerView = findViewById(R.id.client_list);
+                        assert recyclerView != null;
+                        setupRecyclerView((RecyclerView) recyclerView);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RandomUserModel> call, Throwable t) {
+                Log.e("happy", "failed", t);
+                for (int i = 0; i < COUNT; i++){
+                    allClients.add(new Client());
+                }
+            }
+        });
 
         if (findViewById(R.id.client_detail_container) != null) {
             // The detail container view will be present only in the
@@ -72,37 +98,20 @@ public class ClientListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
-        MyApplication.getRandomUserApi().getUsers(2).enqueue(new Callback<RandomUserModel>() {
-            @Override
-            public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
-                List<Result> results;
-                if (response.body() != null) {
-                    results = response.body().getResults();
-                    Log.d("happy", results.get(0).getEmail());
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<RandomUserModel> call, Throwable t) {
-
-            }
-        });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(allClients));
     }
+
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Client> allClients;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
-            mValues = items;
+        public SimpleItemRecyclerViewAdapter(List<Client> items) {
+            allClients = items;
         }
 
         @Override
@@ -114,16 +123,16 @@ public class ClientListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.client = allClients.get(position);
+            holder.firstTextView.setText(allClients.get(position).getFirstName());
+            holder.secondTextView.setText(allClients.get(position).getAddress());
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(ClientDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putString(ClientDetailFragment.ARG_ITEM_ID, holder.client.getFirstName());
                         ClientDetailFragment fragment = new ClientDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -132,7 +141,7 @@ public class ClientListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ClientDetailActivity.class);
-                        intent.putExtra(ClientDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(ClientDetailFragment.ARG_ITEM_ID, holder.client.getFirstName());
 
                         context.startActivity(intent);
                     }
@@ -142,25 +151,25 @@ public class ClientListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return allClients.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public final View itemView;
+            public final TextView firstTextView;
+            public final TextView secondTextView;
+            public Client client;
 
             public ViewHolder(View view) {
                 super(view);
-                mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                itemView = view;
+                firstTextView = view.findViewById(R.id.first_textview);
+                secondTextView = view.findViewById(R.id.second_textview);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + secondTextView.getText() + "'";
             }
         }
     }
