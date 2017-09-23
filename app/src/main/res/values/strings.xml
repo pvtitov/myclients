@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyClients</string>
+    <string name="title_client_detail">Client Detail</string>
+</resources>
