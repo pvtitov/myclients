@@ -35,9 +35,9 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ClientListActivity extends AppCompatActivity {
+public class ClientListActivity extends AppCompatActivity implements Callback<RandomUserModel>{
 
-    private static final int COUNT = 15;
+    private static final int COUNT = 150;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -65,31 +65,16 @@ public class ClientListActivity extends AppCompatActivity {
             }
         });
 
-        MyApplication.getRandomUserApi().getUsers(COUNT).enqueue(new Callback<RandomUserModel>() {
-            @Override
-            public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
-                List<Result> results;
-                if (response.body() != null) {
-                    results = response.body().getResults();
-                    for (int i = 0; i < COUNT; i++){
-                        allClients.add(new Client(results, i));
-                        Log.d("happy", allClients.get(i).getFirstName());
+        //MyApplication.getRandomUserApi().getUsers(COUNT).enqueue(this);
+        for (int i = 0; i < COUNT; i++){
+            allClients.add(new Client());
+        }
 
-                        View recyclerView = findViewById(R.id.client_list);
-                        assert recyclerView != null;
-                        setupRecyclerView((RecyclerView) recyclerView);
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<RandomUserModel> call, Throwable t) {
-                Log.e("happy", "failed", t);
-                for (int i = 0; i < COUNT; i++){
-                    allClients.add(new Client());
-                }
-            }
-        });
+        View recyclerView = findViewById(R.id.client_list);
+        assert recyclerView != null;
+        setupRecyclerView((RecyclerView) recyclerView);
+
 
         if (findViewById(R.id.client_detail_container) != null) {
             // The detail container view will be present only in the
@@ -104,14 +89,29 @@ public class ClientListActivity extends AppCompatActivity {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(allClients));
     }
 
+    @Override
+    public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
+        if (response.body() != null) {
+            Toast.makeText(this, response.body().getResults().get(13).getEmail(), Toast.LENGTH_LONG).show();
+            for (int i = 0; i < COUNT; i++){
+                allClients.add(new Client(response.body().getResults(), i));
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(Call<RandomUserModel> call, Throwable t) {
+        Toast.makeText(this, t.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Client> allClients;
+        private final List<Client> clients;
 
         public SimpleItemRecyclerViewAdapter(List<Client> items) {
-            allClients = items;
+            clients = items;
         }
 
         @Override
@@ -123,9 +123,9 @@ public class ClientListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.client = allClients.get(position);
-            holder.firstTextView.setText(allClients.get(position).getFirstName());
-            holder.secondTextView.setText(allClients.get(position).getAddress());
+            holder.client = clients.get(position);
+            holder.firstTextView.setText(clients.get(position).getFirstName());
+            holder.secondTextView.setText(clients.get(position).getAddress());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -151,7 +151,7 @@ public class ClientListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return allClients.size();
+            return clients.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
