@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class ClientListActivity extends AppCompatActivity {
 
-    private static final int COUNT = 14;
+    private static final int COUNT = 15;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
