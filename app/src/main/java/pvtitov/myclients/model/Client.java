@@ -1,6 +1,5 @@
 package pvtitov.myclients.model;
 
-import junit.framework.Test;
 
 import java.util.List;
 
@@ -42,6 +41,30 @@ public class Client {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 
