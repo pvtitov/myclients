@@ -79,8 +79,6 @@ public class Client {
     }
 
     public Client(){
-        this.firstName = "test first name";
-        this.lastName = "test last name";
     }
 
 }

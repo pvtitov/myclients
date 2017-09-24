@@ -46,7 +46,7 @@ public class ClientDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             client = new Client();
-                    //ClientsFactory.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            client.setFirstName(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -63,7 +63,7 @@ public class ClientDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (client != null) {
-            ((TextView) rootView.findViewById(R.id.client_detail)).setText(client.getLastName());
+            ((TextView) rootView.findViewById(R.id.client_detail)).setText(client.getFirstName());
         }
 
         return rootView;

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import pvtitov.myclients.api.RandomUserModel;
 import pvtitov.myclients.api.Result;
 import pvtitov.myclients.model.Client;
+import pvtitov.myclients.model.ClientsFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,9 +36,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ClientListActivity extends AppCompatActivity implements Callback<RandomUserModel>{
-
-    private static final int COUNT = 150;
+public class ClientListActivity extends AppCompatActivity{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -45,7 +44,11 @@ public class ClientListActivity extends AppCompatActivity implements Callback<Ra
      */
     private boolean mTwoPane;
 
-    private ArrayList<Client> allClients = new ArrayList<>();
+    //private ArrayList<Client> allClients = new ArrayList<>();
+
+    RecyclerView recyclerView;
+    SimpleItemRecyclerViewAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,53 +68,38 @@ public class ClientListActivity extends AppCompatActivity implements Callback<Ra
             }
         });
 
-        //MyApplication.getRandomUserApi().getUsers(COUNT).enqueue(this);
-        for (int i = 0; i < COUNT; i++){
-            allClients.add(new Client());
-        }
 
-
-        View recyclerView = findViewById(R.id.client_list);
+        recyclerView = (RecyclerView) findViewById(R.id.client_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView(recyclerView);
 
 
-        if (findViewById(R.id.client_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
+        if (findViewById(R.id.client_detail_container) != null) mTwoPane = true;
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(allClients));
-    }
-
-    @Override
-    public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
-        if (response.body() != null) {
-            Toast.makeText(this, response.body().getResults().get(13).getEmail(), Toast.LENGTH_LONG).show();
-            for (int i = 0; i < COUNT; i++){
-                allClients.add(new Client(response.body().getResults(), i));
-            }
+        List<Client> clients = ClientsFactory.getInstance(this).getAllClients();
+        if (adapter == null) {
+            adapter = new SimpleItemRecyclerViewAdapter(clients);
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setClients(clients);
+            adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onFailure(Call<RandomUserModel> call, Throwable t) {
-        Toast.makeText(this, t.getMessage(), Toast.LENGTH_LONG).show();
     }
 
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Client> clients;
+        private List<Client> clients;
 
         public SimpleItemRecyclerViewAdapter(List<Client> items) {
             clients = items;
+        }
+
+        public void setClients(List<Client> clients) {
+            this.clients = clients;
         }
 
         @Override
