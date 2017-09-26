@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import pvtitov.myclients.model.Client;
+import pvtitov.myclients.model.ClientsFactory;
 
 
 public class ClientDetailFragment extends Fragment {
@@ -25,25 +26,33 @@ public class ClientDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARGUMENT_EMAIL)) {
-            // or use a Loader to load content from a content provider.
-            client = new Client();
-            client.setEmail(getArguments().getString(ARGUMENT_EMAIL));
-        }
         activity = this.getActivity();
+        if (getArguments().containsKey(ARGUMENT_EMAIL))
+            client = ClientsFactory.getInstance(activity).findClientByEmail(getArguments().getString(ARGUMENT_EMAIL));
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.client_detail, container, false);
 
-        if (client != null)
-            ((TextView) rootView.findViewById(R.id.client_detail)).setText(client.getEmail());
 
         appBarLayout = activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null)
-            appBarLayout.setTitle(client.getEmail());
+            appBarLayout.setTitle(client.getFirstName() + " " + client.getLastName());
+
+
+        if (client != null)
+            ((TextView) rootView.findViewById(R.id.client_detail)).setText(
+                    client.getFirstName()
+                    + "\n" + client.getLastName()
+                    + "\n" + client.getEmail()
+                    + "\n" + client.getPhone()
+                    + "\n" + client.getNationality()
+                    + "\n" + client.getAddress()
+            );
 
         return rootView;
     }

@@ -75,6 +75,19 @@ public class ClientsFactory implements Callback<RandomUserModel> {
         return clients;
     }
 
+    public Client findClientByEmail(String email){
+
+        allClients = getAllClients();
+
+        if (allClients != null) {
+            for (int i = 0; i < allClients.size(); i++){
+                if (allClients.get(i).getEmail().equals(email)) return allClients.get(i);
+            }
+        }
+
+        return null;
+    }
+
     private static ContentValues getContentValues(Client client){
         ContentValues values = new ContentValues();
         values.put(Columns.FIRST_NAME, client.getFirstName());
