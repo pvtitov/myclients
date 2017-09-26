@@ -17,6 +17,7 @@ public class Client {
     private String phone;
     private String nationality;
     private String address;
+    private String picture;
 
 
     public String getFirstName() {
@@ -43,6 +44,10 @@ public class Client {
         return address;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -67,6 +72,10 @@ public class Client {
         this.address = address;
     }
 
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
 
 
     public Client(List<Result> results, int position) {
@@ -76,6 +85,7 @@ public class Client {
         this.phone = results.get(position).getPhone();
         this.nationality = results.get(position).getNat();
         this.address = results.get(position).getLocation().getCity();
+        this.picture = results.get(position).getPicture().getLarge();
     }
 
     public Client(){

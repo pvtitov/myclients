@@ -15,6 +15,7 @@ public class DatabaseWrapper {
             public static final String PHONE = "phone";
             public static final String NATIONALITY = "nationality";
             public static final String ADDRESS = "address";
+            public static final String PICTURE = "picture";
         }
     }
 }

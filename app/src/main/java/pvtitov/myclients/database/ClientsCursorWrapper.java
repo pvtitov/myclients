@@ -23,6 +23,7 @@ public class ClientsCursorWrapper extends CursorWrapper {
         String phone = getString(getColumnIndex(Columns.PHONE));
         String nationality = getString(getColumnIndex(Columns.NATIONALITY));
         String address = getString(getColumnIndex(Columns.ADDRESS));
+        String picture = getString(getColumnIndex(Columns.PICTURE));
 
         Client client = new Client();
         client.setFirstName(firstName);
@@ -31,6 +32,7 @@ public class ClientsCursorWrapper extends CursorWrapper {
         client.setPhone(phone);
         client.setNationality(nationality);
         client.setAddress(address);
+        client.setPicture(picture);
         return client;
     }
 }

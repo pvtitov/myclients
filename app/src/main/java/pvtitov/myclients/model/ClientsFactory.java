@@ -96,6 +96,7 @@ public class ClientsFactory implements Callback<RandomUserModel> {
         values.put(Columns.PHONE, client.getPhone());
         values.put(Columns.NATIONALITY, client.getNationality());
         values.put(Columns.ADDRESS, client.getAddress());
+        values.put(Columns.PICTURE, client.getPicture());
         return values;
     }
 

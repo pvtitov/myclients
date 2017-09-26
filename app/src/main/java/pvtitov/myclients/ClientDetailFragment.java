@@ -1,13 +1,17 @@
 package pvtitov.myclients;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import pvtitov.myclients.model.Client;
 import pvtitov.myclients.model.ClientsFactory;
@@ -42,6 +46,9 @@ public class ClientDetailFragment extends Fragment {
         appBarLayout = activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null)
             appBarLayout.setTitle(client.getFirstName() + " " + client.getLastName());
+
+        ImageView imageView = rootView.findViewById(R.id.picture);
+        Picasso.with(activity).load(client.getPicture()).into(imageView);
 
 
         if (client != null)

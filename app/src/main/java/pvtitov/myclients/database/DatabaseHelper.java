@@ -26,7 +26,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ClientsTable.Columns.EMAIL + ", "
                 + ClientsTable.Columns.PHONE + ", "
                 + ClientsTable.Columns.NATIONALITY + ", "
-                + ClientsTable.Columns.ADDRESS + ")");
+                + ClientsTable.Columns.ADDRESS + ", "
+                + ClientsTable.Columns.PICTURE + ")");
     }
 
     @Override
