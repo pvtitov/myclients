@@ -10,50 +10,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import pvtitov.myclients.model.Client;
-import pvtitov.myclients.model.ClientsFactory;
 
-/**
- * A fragment representing a single Client detail screen.
- * This fragment is either contained in a {@link ClientListActivity}
- * in two-pane mode (on tablets) or a {@link ClientDetailActivity}
- * on handsets.
- */
+
 public class ClientDetailFragment extends Fragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
-    public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
+    public static final String ARGUMENT_EMAIL = "client_email";
+
     private Client client;
+    private Activity activity;
+    private CollapsingToolbarLayout appBarLayout;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ClientDetailFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
+        if (getArguments().containsKey(ARGUMENT_EMAIL)) {
+            // or use a Loader to load content from a content provider.
             client = new Client();
-            client.setFirstName(getArguments().getString(ARG_ITEM_ID));
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(client.getFirstName());
-            }
+            client.setEmail(getArguments().getString(ARGUMENT_EMAIL));
         }
+        activity = this.getActivity();
     }
 
     @Override
@@ -61,10 +38,12 @@ public class ClientDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.client_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        if (client != null) {
-            ((TextView) rootView.findViewById(R.id.client_detail)).setText(client.getFirstName());
-        }
+        if (client != null)
+            ((TextView) rootView.findViewById(R.id.client_detail)).setText(client.getEmail());
+
+        appBarLayout = activity.findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null)
+            appBarLayout.setTitle(client.getEmail());
 
         return rootView;
     }

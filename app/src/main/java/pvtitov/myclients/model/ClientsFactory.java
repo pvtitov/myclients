@@ -2,6 +2,7 @@ package pvtitov.myclients.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import pvtitov.myclients.ClientListActivity;
 import pvtitov.myclients.api.RandomUserApi;
 import pvtitov.myclients.api.RandomUserModel;
 import pvtitov.myclients.database.ClientsCursorWrapper;
