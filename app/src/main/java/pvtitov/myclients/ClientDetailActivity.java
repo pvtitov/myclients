@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import pvtitov.myclients.database.DatabaseWrapper;
 import pvtitov.myclients.model.ClientsFactory;
 
 /**
@@ -29,7 +28,7 @@ public class ClientDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        ImageView imageView = (ImageView) findViewById(R.id.picture);
+        ImageView imageView = (ImageView) findViewById(R.id.picture_detail);
         Picasso.with(this).load(
                 ClientsFactory.getInstance(this).findClientByEmail(getIntent().getStringExtra(ClientDetailFragment.ARGUMENT_EMAIL)
                 ).getPicture()).into(imageView);

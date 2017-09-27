@@ -10,7 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import pvtitov.myclients.model.Client;
 import pvtitov.myclients.model.ClientsFactory;
@@ -75,6 +78,7 @@ public class ClientListActivity extends AppCompatActivity{
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.client = clients.get(position);
+            Picasso.with(ClientListActivity.this).load(clients.get(position).getPicture()).into(holder.imageView);
             holder.firstTextView.setText(clients.get(position).getFirstName().toUpperCase());
             holder.secondTextView.setText(clients.get(position).getLastName().toUpperCase());
 
@@ -97,6 +101,7 @@ public class ClientListActivity extends AppCompatActivity{
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final View itemView;
+            final ImageView imageView;
             final TextView firstTextView;
             final TextView secondTextView;
             Client client;
@@ -104,6 +109,7 @@ public class ClientListActivity extends AppCompatActivity{
             ViewHolder(View view) {
                 super(view);
                 itemView = view;
+                imageView = view.findViewById(R.id.picture_list);
                 firstTextView = view.findViewById(R.id.first_textview);
                 secondTextView = view.findViewById(R.id.second_textview);
             }
