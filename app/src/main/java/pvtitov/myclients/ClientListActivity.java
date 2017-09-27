@@ -2,6 +2,9 @@ package pvtitov.myclients;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -76,11 +80,29 @@ public class ClientListActivity extends AppCompatActivity{
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.client = clients.get(position);
             Picasso.with(ClientListActivity.this).load(clients.get(position).getPicture()).into(holder.imageView);
-            holder.firstTextView.setText(clients.get(position).getFirstName().toUpperCase());
-            holder.secondTextView.setText(clients.get(position).getLastName().toUpperCase());
+            holder.firstTextView.setText(clients.get(position).getFirstName());
+            holder.secondTextView.setText(clients.get(position).getLastName());
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setType("plain/text");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT,
+                            clients.get(position).getFirstName()
+                                + "\n" + clients.get(position).getLastName()
+                                + "\n" + clients.get(position).getEmail()
+                                + "\n" + clients.get(position).getPhone()
+                                + "\n" + clients.get(position).getNationality()
+                                + "\n" + clients.get(position).getAddress());
+                    PackageManager packageManager = getPackageManager();
+                    List<ResolveInfo> activities = packageManager.queryIntentActivities(emailIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                    boolean isIntentSafe = activities.size() > 0;
+                    if (isIntentSafe) startActivity(emailIntent);
+                }
+            });
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,6 +126,7 @@ public class ClientListActivity extends AppCompatActivity{
             final ImageView imageView;
             final TextView firstTextView;
             final TextView secondTextView;
+            final ImageButton imageButton;
             Client client;
 
             ViewHolder(View view) {
@@ -112,6 +135,7 @@ public class ClientListActivity extends AppCompatActivity{
                 imageView = view.findViewById(R.id.picture_list);
                 firstTextView = view.findViewById(R.id.first_textview);
                 secondTextView = view.findViewById(R.id.second_textview);
+                imageButton = view.findViewById(R.id.share);
             }
         }
     }

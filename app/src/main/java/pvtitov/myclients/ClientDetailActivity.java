@@ -40,7 +40,7 @@ public class ClientDetailActivity extends AppCompatActivity {
         final PackageManager packageManager = getPackageManager();
 
         ImageView imageView = (ImageView) findViewById(R.id.picture_detail);
-        Picasso.with(this).load(client.getPicture()).into(imageView);
+        if (client != null) Picasso.with(this).load(client.getPicture()).into(imageView);
 
         FloatingActionButton fabCall = (FloatingActionButton) findViewById(R.id.fab_call);
         fabCall.setOnClickListener(new View.OnClickListener() {
@@ -61,16 +61,8 @@ public class ClientDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
                 emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, client.getEmail());
-                emailIntent.putExtra(Intent.EXTRA_TEXT,
-                        client.getFirstName()
-                                + "\n" + client.getLastName()
-                                + "\n" + client.getEmail()
-                                + "\n" + client.getPhone()
-                                + "\n" + client.getNationality()
-                                + "\n" + client.getAddress());
-                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(client.getPicture()));
-                List<ResolveInfo> activities = packageManager.queryIntentActivities(emailIntent, 0);
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {client.getEmail()});
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(emailIntent, PackageManager.MATCH_DEFAULT_ONLY);
                 boolean isIntentSafe = activities.size() > 0;
                 if (isIntentSafe) startActivity(emailIntent);
 
