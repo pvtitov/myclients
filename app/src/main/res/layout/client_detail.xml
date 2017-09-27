@@ -13,11 +13,6 @@
         android:textIsSelectable="true"
         tools:context="pvtitov.myclients.ClientDetailFragment" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/picture"/>
-
 
 </FrameLayout>
 

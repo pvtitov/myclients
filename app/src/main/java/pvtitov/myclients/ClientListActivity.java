@@ -75,8 +75,8 @@ public class ClientListActivity extends AppCompatActivity{
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.client = clients.get(position);
-            holder.firstTextView.setText(clients.get(position).getFirstName());
-            holder.secondTextView.setText(clients.get(position).getAddress());
+            holder.firstTextView.setText(clients.get(position).getFirstName().toUpperCase());
+            holder.secondTextView.setText(clients.get(position).getLastName().toUpperCase());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

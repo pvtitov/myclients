@@ -47,9 +47,6 @@ public class ClientDetailFragment extends Fragment {
         if (appBarLayout != null)
             appBarLayout.setTitle(client.getFirstName() + " " + client.getLastName());
 
-        ImageView imageView = rootView.findViewById(R.id.picture);
-        Picasso.with(activity).load(client.getPicture()).into(imageView);
-
 
         if (client != null)
             ((TextView) rootView.findViewById(R.id.client_detail)).setText(
