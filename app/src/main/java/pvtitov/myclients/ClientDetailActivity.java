@@ -1,8 +1,11 @@
 package pvtitov.myclients;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +14,12 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import pvtitov.myclients.model.Client;
 import pvtitov.myclients.model.ClientsFactory;
+import retrofit2.http.HTTP;
+
 
 /**
  * An activity representing a single Client detail screen. This
@@ -28,17 +36,44 @@ public class ClientDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        ImageView imageView = (ImageView) findViewById(R.id.picture_detail);
-        Picasso.with(this).load(
-                ClientsFactory.getInstance(this).findClientByEmail(getIntent().getStringExtra(ClientDetailFragment.ARGUMENT_EMAIL)
-                ).getPicture()).into(imageView);
+        final Client client = ClientsFactory.getInstance(this).findClientByEmail(getIntent().getStringExtra(ClientDetailFragment.ARGUMENT_EMAIL));
+        final PackageManager packageManager = getPackageManager();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ImageView imageView = (ImageView) findViewById(R.id.picture_detail);
+        Picasso.with(this).load(client.getPicture()).into(imageView);
+
+        FloatingActionButton fabCall = (FloatingActionButton) findViewById(R.id.fab_call);
+        fabCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Phone call or email", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Uri number = Uri.parse("tel:" + client.getPhone());
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(callIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe) startActivity(callIntent);
+            }
+        });
+
+
+        FloatingActionButton fabMail = (FloatingActionButton) findViewById(R.id.fab_mail);
+        fabMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, client.getEmail());
+                emailIntent.putExtra(Intent.EXTRA_TEXT,
+                        client.getFirstName()
+                                + "\n" + client.getLastName()
+                                + "\n" + client.getEmail()
+                                + "\n" + client.getPhone()
+                                + "\n" + client.getNationality()
+                                + "\n" + client.getAddress());
+                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(client.getPicture()));
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(emailIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe) startActivity(emailIntent);
+
             }
         });
 

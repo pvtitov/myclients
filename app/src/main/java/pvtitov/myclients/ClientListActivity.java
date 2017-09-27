@@ -113,11 +113,6 @@ public class ClientListActivity extends AppCompatActivity{
                 firstTextView = view.findViewById(R.id.first_textview);
                 secondTextView = view.findViewById(R.id.second_textview);
             }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + secondTextView.getText() + "'";
-            }
         }
     }
 }

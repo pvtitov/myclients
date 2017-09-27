@@ -51,13 +51,26 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
         android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:fabSize="normal"
         app:layout_anchor="@+id/client_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        app:srcCompat="@android:drawable/stat_sys_phone_call_forward" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|start"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="mini"
+        app:layout_anchor="@+id/fab_call"
+        app:layout_anchorGravity="center_vertical"
+        app:srcCompat="@android:drawable/sym_action_email" />
 
 </android.support.design.widget.CoordinatorLayout>
