@@ -27,7 +27,7 @@ import static pvtitov.myclients.database.DatabaseWrapper.ClientsTable.*;
 
 public class ClientsFactory implements Callback<RandomUserModel> {
 
-    private static final int COUNT = 150;
+    private static final int COUNT = 1;
 
     private static ClientsFactory clientsFactory;
     private Context context;
@@ -40,7 +40,7 @@ public class ClientsFactory implements Callback<RandomUserModel> {
     }
 
     private RandomUserApi randomUserApi;
-    private List<Client> allClients = new ArrayList<>();
+    private List<Client> allClients;
 
     private ClientsFactory(Context context) {
         this.context = context.getApplicationContext();
@@ -50,10 +50,7 @@ public class ClientsFactory implements Callback<RandomUserModel> {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         randomUserApi = retrofit.create(RandomUserApi.class);
-        for (int i = 0; i < COUNT; i++) {
-            randomUserApi.getUser().enqueue(this);
-        }
-
+        randomUserApi.getUsers(COUNT).enqueue(this);
     }
 
     public List<Client> getAllClients() {
@@ -112,15 +109,19 @@ public class ClientsFactory implements Callback<RandomUserModel> {
 
     @Override
     public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
+        Log.d("happy", "onResponse");
         if (response.body() != null) {
-            allClients.add(new Client(response.body().getResults(), 0));
+            Log.d("happy", "response.body() != null");
+            for (int i = 0; i < response.body().getResults().size(); i++) {
+                allClients.add(new Client(response.body().getResults(), i));
+            }
+            addClients(allClients);
         }
-        // 101 because some requests (first) crash
-        if (allClients.size() == 101) addClients(allClients);
     }
 
     @Override
     public void onFailure(Call call, Throwable t)  {
+        Log.d("happy", t.getMessage());
         t.getStackTrace();
     }
 }
