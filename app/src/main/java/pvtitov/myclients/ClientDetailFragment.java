@@ -44,7 +44,7 @@ public class ClientDetailFragment extends Fragment {
 
 
         appBarLayout = activity.findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null)
+        if (appBarLayout != null && client != null)
             appBarLayout.setTitle(client.getFirstName() + " " + client.getLastName());
 
 

@@ -27,7 +27,7 @@ import static pvtitov.myclients.database.DatabaseWrapper.ClientsTable.*;
 
 public class ClientsFactory implements Callback<RandomUserModel> {
 
-    private static final int COUNT = 1;
+    private static final int COUNT = 150;
 
     private static ClientsFactory clientsFactory;
     private Context context;
@@ -40,7 +40,7 @@ public class ClientsFactory implements Callback<RandomUserModel> {
     }
 
     private RandomUserApi randomUserApi;
-    private List<Client> allClients;
+    private List<Client> allClients = new ArrayList<>();
 
     private ClientsFactory(Context context) {
         this.context = context.getApplicationContext();
