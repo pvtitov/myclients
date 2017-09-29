@@ -2,15 +2,11 @@ package pvtitov.myclients.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvtitov.myclients.ClientListActivity;
 import pvtitov.myclients.api.RandomUserApi;
 import pvtitov.myclients.api.RandomUserModel;
 import pvtitov.myclients.database.ClientsCursorWrapper;
@@ -21,6 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 
 import static pvtitov.myclients.database.DatabaseWrapper.ClientsTable.*;
 
@@ -51,6 +48,16 @@ public class ClientsFactory implements Callback<RandomUserModel> {
                 .build();
         randomUserApi = retrofit.create(RandomUserApi.class);
         randomUserApi.getUsers(COUNT).enqueue(this);
+    }
+
+    public interface ClientsDownloadedCallback{
+        void onClientsDownloaded();
+    }
+
+    private ClientsDownloadedCallback callback;
+
+    public void registerCallback(ClientsDownloadedCallback callback) {
+        this.callback = callback;
     }
 
     public List<Client> getAllClients() {
@@ -109,19 +116,18 @@ public class ClientsFactory implements Callback<RandomUserModel> {
 
     @Override
     public void onResponse(Call<RandomUserModel> call, Response<RandomUserModel> response) {
-        Log.d("happy", "onResponse");
+
         if (response.body() != null) {
-            Log.d("happy", "response.body() != null");
             for (int i = 0; i < response.body().getResults().size(); i++) {
                 allClients.add(new Client(response.body().getResults(), i));
             }
             addClients(allClients);
+            callback.onClientsDownloaded();
         }
     }
 
     @Override
     public void onFailure(Call call, Throwable t)  {
-        Log.d("happy", t.getMessage());
         t.getStackTrace();
     }
 }

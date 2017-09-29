@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +23,8 @@ import pvtitov.myclients.model.ClientsFactory;
 
 import java.util.List;
 
-public class ClientListActivity extends AppCompatActivity{
+public class ClientListActivity extends AppCompatActivity
+        implements ClientsFactory.ClientsDownloadedCallback {
 
 
     RecyclerView recyclerView;
@@ -49,6 +49,7 @@ public class ClientListActivity extends AppCompatActivity{
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         List<Client> clients = ClientsFactory.getInstance(this).getAllClients();
+        ClientsFactory.getInstance(this).registerCallback(this);
         if (adapter == null) {
             adapter = new SimpleItemRecyclerViewAdapter(clients);
             recyclerView.setAdapter(adapter);
@@ -56,6 +57,11 @@ public class ClientListActivity extends AppCompatActivity{
             adapter.setClients(clients);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onClientsDownloaded() {
+        ClientListActivity.this.recreate();
     }
 
 
